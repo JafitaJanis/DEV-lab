@@ -1,0 +1,33 @@
+import pandas as pd
+import numpy as np
+
+# Simulate dataset
+data = {
+    'Date': pd.date_range(start='2023-01-01', periods=150, freq='W'),
+    'City': np.random.choice(['Chennai', 'Mumbai', 'Delhi', 'Bangalore'], size=150),
+    'Temperature': np.random.uniform(25, 45, size=150)  # weekly temperature
+}
+df = pd.DataFrame(data)
+
+# Convert Date to datetime and extract Month name
+df['Month'] = df['Date'].dt.strftime('%B')
+
+# Group by City and Month, sum of Temperature
+grouped = df.groupby(['City', 'Month'])['Temperature'].sum().reset_index()
+
+# Pivot table for summary
+pivot_table = grouped.pivot(index='City', columns='Month', values='Temperature').fillna(0)
+
+# Display the pivot table
+print("\nPivot Table - Monthly Temperature Summary:")
+print(pivot_table)
+
+# Define summer months
+summer_months = ['May', 'June', 'July']
+
+# Calculate total temperature for summer months per city
+pivot_table['Summer_Total'] = pivot_table[summer_months].sum(axis=1)
+
+# Identify city with highest summer temperature
+hottest_city = pivot_table['Summer_Total'].idxmax()
+print(f"\nCity with the highest total temperature in summer: {hottest_city}")
