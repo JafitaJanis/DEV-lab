@@ -1,0 +1,13 @@
+library(dplyr)
+library(tibble)
+
+data <- mtcars %>%
+  rownames_to_column("car_model") %>%      # Make rownames a column
+  mutate(power_to_weight = hp / wt) %>%    # Add new variable
+  filter(mpg > 20, cyl %in% c(4,6),        # Filter rows by multiple conditions
+         !is.na(hp)) %>%                   # Filter out missing hp values (if any)
+  select(car_model, mpg, cyl, power_to_weight) %>%  # Select specific columns
+  arrange(desc(power_to_weight)) %>%       # Sort by power_to_weight descending
+  distinct()                               # Remove duplicates if any
+
+print(data)
