@@ -1,0 +1,30 @@
+import pandas as pd
+import numpy as np
+
+# Step 1: Simulate employee work hours dataset
+emp_data = {
+    'Employee': ['E' + str(i) for i in range(1, 21)],
+    'Department': np.random.choice(['HR', 'IT', 'Finance', 'Marketing'], size=20),
+    'Hours Worked': np.random.randint(30, 60, size=20)
+}
+
+# Step 2: Create DataFrame
+emp_df = pd.DataFrame(emp_data)
+
+# Step 3: Display the original dataset
+print("Original Employee Work Hours Dataset:")
+print(emp_df)
+
+# Step 4: Group by Department to get total and average hours
+summary = emp_df.groupby('Department')['Hours Worked'].agg(['sum', 'mean']).reset_index()
+
+# Step 5: Create pivot table for department summary
+pivot_emp = summary.pivot_table(index='Department')
+
+# Step 6: Display the summary report
+print("\nEmployee Work Hours Summary (Pivot Table):")
+print(pivot_emp)
+
+# Step 7: Identify department with the highest average working hours
+highest_avg_dept = pivot_emp['mean'].idxmax()
+print(f"\nDepartment with the highest average working hours: {highest_avg_dept}")
