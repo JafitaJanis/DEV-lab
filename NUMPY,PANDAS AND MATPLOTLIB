@@ -1,0 +1,80 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Step 1: NumPy arrays
+months = np.array(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'])
+product_a = np.array([250, 270, 300, 320, 310, 330])
+product_b = np.array([300, 340, 330, 370, 360, 390])
+
+# NumPy operations
+print("\nNumPy Basic Operations:")
+print("Averages - A:", np.mean(product_a), " B:", np.mean(product_b))
+print("Max Sales - A:", np.max(product_a), " B:", np.max(product_b))
+print("Standard Deviation - A:", np.std(product_a))
+print("Element-wise Difference:", product_b - product_a)
+
+# Reshape example (2D)
+combined = np.stack((product_a, product_b), axis=1)
+print("\nReshaped 2D array:\n", combined)
+
+# Step 2: Create a Pandas DataFrame
+df = pd.DataFrame({
+    'Month': months,
+    'Product A': product_a,
+    'Product B': product_b
+})
+
+# Derived Columns
+df['Total'] = df['Product A'] + df['Product B']
+df['Average'] = df[['Product A', 'Product B']].mean(axis=1)
+
+print("\nPandas DataFrame:\n", df)
+
+# Step 3: More Pandas operations
+
+# Filtering rows
+print("\nFilter: Months where Product B > 350")
+print(df[df['Product B'] > 350])
+
+# Sorting
+print("\nSorted by Total Sales (Descending):")
+print(df.sort_values(by='Total', ascending=False))
+
+# Describe summary
+print("\nSummary statistics:\n", df.describe())
+
+# Correlation
+print("\nCorrelation Matrix:\n", df[['Product A', 'Product B', 'Total']].corr())
+
+# Grouping (simulate region for grouping)
+df['Region'] = ['North', 'South', 'North', 'South', 'North', 'South']
+print("\nGroup by Region (Mean Sales):\n", df.groupby('Region')[['Product A', 'Product B']].mean())
+
+# Line Plot
+plt.figure(figsize=(8, 5))
+plt.plot(df['Month'], df['Product A'], label='Product A', marker='o')
+plt.plot(df['Month'], df['Product B'], label='Product B', marker='o')
+plt.title("Monthly Sales Trend")
+plt.xlabel("Month")
+plt.ylabel("Sales")
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# Histogram
+plt.figure(figsize=(6, 4))
+plt.hist(df['Product A'], bins=5, color='skyblue', edgecolor='black')
+plt.title("Histogram of Product A Sales")
+plt.xlabel("Sales")
+plt.ylabel("Frequency")
+plt.tight_layout()
+plt.show()
+
+# Pie Chart of Total Sales by Month
+plt.figure(figsize=(6, 6))
+plt.pie(df['Total'], labels=df['Month'], autopct='%1.1f%%', startangle=90)
+plt.title("Monthly Share of Total Sales (A + B)")
+plt.axis('equal')  # Equal aspect ratio ensures a circle
+plt.show()
